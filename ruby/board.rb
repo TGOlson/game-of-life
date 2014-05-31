@@ -39,15 +39,6 @@ class Board
     swap_boards
   end
 
-  def update_cell_state(cell, neighbors)
-    state = find_next_state cell, neighbors
-
-    next_cell = cell.dup
-    next_cell.alive = state
-
-    @next_board[cell.row][cell.col] = next_cell
-  end
-
   def get_neighbors(cell)
     diffs = [-1, 0, 1]
 
@@ -67,25 +58,33 @@ class Board
       end
     end
 
+  def update_cell_state(cell, neighbors)
+    state = find_next_state cell, neighbors
+
+    next_cell = cell.dup
+    next_cell.alive = state
+
+    @next_board[cell.row][cell.col] = next_cell
+  end
+
+
     neighbors
   end
 
   def find_next_state(cell, neighbors)
     living_neighbors = neighbors.select(&:alive).count
 
-    return true if living_neighbors == 3
-    return true if living_neighbors == 2 && cell.alive
-
-    return false
+    living_neighbors == 3 || (living_neighbors == 2 && cell.alive)
   end
 
   def swap_boards
+    #consider keeping track of previous board
     @last_board = @current_board
   end
 
   def active
-    to_s.flatten.join.include?(Cell.alive_char)
     # consider adding last and current board equality checks
+    to_s.flatten.join.include?(Cell.alive_char)
   end
 
   def to_s

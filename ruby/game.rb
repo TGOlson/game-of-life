@@ -37,6 +37,7 @@ class Game
 
 end
 
+# move to options parser class
 options = {}
 
 OptionParser.new do |opts|
