@@ -1,9 +1,9 @@
 require 'rspec'
-require './game'
-require './board'
+require_relative '../game.rb'
+require_relative '../board.rb'
 
 describe Game do
-  let(:game) { game = Game.new 10, 10 }
+  let(:game) { game = Game.new '--rows'=> 10, '--cols'=> 10 }
 
   describe "initialize" do 
     it "should set a board value" do

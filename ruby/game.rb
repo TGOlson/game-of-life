@@ -1,14 +1,13 @@
-require './board'
+require_relative './board'
 
 class Game
   attr_reader :board, :next_turn
 
   def initialize(options)
-    cols   = (options.shift || 10).to_i
-    rows   = (options.shift || 10).to_i
-    factor = (options.shift || 0.8).to_f
-    
-    @speed  = (options.shift || 0.3).to_f
+    cols   = (options['--cols']   || 10).to_i
+    rows   = (options['--rows']   || 10).to_i
+    factor = (options['--factor'] || 0.8).to_f
+    @speed = (options['--speed']  || 0.3).to_f
 
     @board = Board.new cols, rows, factor
   end
@@ -23,9 +22,7 @@ class Game
   end
 
   def to_s
-    @board.current.each do |row|
-      puts row.map(&:to_s).join
-    end
+    @board.current.each {|row| puts row.map(&:to_s).join}
     puts
   end
 
@@ -35,5 +32,11 @@ class Game
 
 end
 
-game = Game.new(ARGV) unless ARGV.empty?
-game.play
+# This allows program to accept command line arguments, if present
+# If no arguments are present, either the user is pretty apathetic or the specs are being run
+unless ARGV.first.match('/spec')
+  game = Game.new(Hash[*ARGV])
+
+  # And then the game is played...
+  game.play
+end
