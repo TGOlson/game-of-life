@@ -1,3 +1,6 @@
+ALIVE_CHAR = 'X'
+DEAD_CHAR  = ' '
+
 class Cell
   attr_reader :row, :col
   attr_accessor :alive
@@ -8,7 +11,15 @@ class Cell
     @alive = alive
   end
 
+  def self.alive_char
+    ALIVE_CHAR
+  end
+
+  def self.dead_char
+    DEAD_CHAR
+  end
+
   def to_s
-    @alive ? 'X' : ' '
+    @alive ? Cell.alive_char : Cell.dead_char
   end
 end

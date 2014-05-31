@@ -1,46 +1,58 @@
+require 'optparse'
 require_relative './board'
 
 class Game
-  attr_reader :board, :next_turn
 
-  def initialize(options)
-    cols   = (options['--cols']   || 10).to_i
-    rows   = (options['--rows']   || 10).to_i
-    factor = (options['--factor'] || 0.8).to_f
-    @speed = (options['--speed']  || 0.3).to_f
-
+  # using named params to set defaults from the options hash
+  def initialize(cols: 20, rows: 20, factor: 0.2, speed: 0.3)
+    @speed = speed
     # add a turns options
 
     @board = Board.new cols, rows, factor
   end
 
   def play
-    while true
-      system "clear"
+    while active
       self.to_s
       sleep @speed
       self.next_turn
     end
-  end
 
-  def to_s
-    @board.current.each {|row| puts row.map(&:to_s).join}
-    puts
+    self.to_s
+    puts "The game of life has ended. No life remains."
   end
 
   def next_turn
     @board.update
   end
 
+  def active
+    @board.active
+  end
+
+  def to_s
+    system "clear"
+    puts @board.to_s
+  end
+
 end
+
+options = {}
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: ruby game.rb [options]"
+  opts.separator ""
+  opts.separator "Specific options: [default value]"
+
+  opts.on("-c", "--cols COLS",     "Set column count. [20]")               { |c| options[:cols]   = c.to_i }
+  opts.on("-r", "--rows ROWS",     "Set row count. [20]")                  { |r| options[:rows]   = r.to_i }
+  opts.on("-f", "--factor FACTOR", "Chance a cell will seed alive. [0.2]") { |f| options[:factor] = f.to_f }
+  opts.on("-s", "--speed SPEED",   "Refresh rate in seconds. [0.3]")       { |s| options[:speed]  = s.to_f }
+end.parse!
 
 # This allows program to accept command line arguments, if present
 # If no arguments are present, either the user is pretty apathetic or the specs are being run
-first = ARGV.shift if ARGV.first.match('ruby')
-
-unless first && first.match('spec')
-  game = Game.new(Hash[*ARGV])
+game = Game.new(options)
 
   # And then the game is played...
-  game.play
-end
+game.play
