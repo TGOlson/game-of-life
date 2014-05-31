@@ -58,6 +58,9 @@ class Board
       end
     end
 
+    neighbors
+  end
+
   def update_cell_state(cell, neighbors)
     state = find_next_state cell, neighbors
 
@@ -65,10 +68,6 @@ class Board
     next_cell.alive = state
 
     @next_board[cell.row][cell.col] = next_cell
-  end
-
-
-    neighbors
   end
 
   def find_next_state(cell, neighbors)
