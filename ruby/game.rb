@@ -9,6 +9,8 @@ class Game
     factor = (options['--factor'] || 0.8).to_f
     @speed = (options['--speed']  || 0.3).to_f
 
+    # add a turns options
+
     @board = Board.new cols, rows, factor
   end
 
@@ -34,7 +36,9 @@ end
 
 # This allows program to accept command line arguments, if present
 # If no arguments are present, either the user is pretty apathetic or the specs are being run
-unless ARGV.first.match('/spec')
+first = ARGV.shift if ARGV.first.match('ruby')
+
+unless first && first.match('spec')
   game = Game.new(Hash[*ARGV])
 
   # And then the game is played...
