@@ -1,7 +1,5 @@
 require 'optparse'
 
-
-
 class Options
   def self.parse_options
 
